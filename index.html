@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" />
+  <link rel="stylesheet" href="https://bulma.io/vendor/fontawesome-free-5.15.2-web/css/all.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+  <style>
+    html,
+    body {
+      padding-top: 5px;
+      padding-left: 15px;
+      padding-right: 15px;
+      background-color: #CDD3D5;
+    }
+
+    #div-gallery img {
+      width: auto;
+      height: 200px;
+    }
+
+    /* .card figure {
+      width: auto;
+      height: 200px;
+    } */
+
+    .card figure {
+      display: flex;
+      justify-content: center;
+    }
+
+    /* #div-muestra-principal figure {
+      height: 650px;
+      width: auto;
+    } */
+
+    nav {
+      box-shadow: 0 .5em 1em -.125em rgba(10, 10, 10, .1), 0 0 0 1px rgba(10, 10, 10, .02);
+      border-radius: 3px;
+      margin: 0;
+      background-color: #D7D7D7;
+    }
+
+    #btn-buscar {
+      background-color: #F24236 !important;
+      color: #eeeeee;
+    }
+
+    nav a {
+      color: #007991;
+    }
+
+    .box a {
+      text-decoration: underline;
+    }
+
+    .is-blurred {
+      filter: blur(5px);
+    }
+
+    #mostrar,
+    p.title {
+      color: #2C1320;
+    }
+
+    #p-ano {
+      font-weight: bold;
+      font-style: italic;
+      font-family: monospace;
+      text-transform: uppercase;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- nav + búsqueda -->
+  <nav class="columns has-text-centered">
+    <div class="column is-half is-offset-3">
+      <div class="columns is-vcentered">
+        <div class="column is-narrow">
+          <a id="a-avanzada" href="#">Búsqueda avanzada
+            <span class="icon is-small">
+              <i class="fas fa-angle-down"></i>
+            </span>
+          </a>
+        </div>
+        <div class="column">
+          <div class="field has-addons">
+            <div class="control">
+              <input id="tb-buscar" class="input" type="text" placeholder="Buscar por nombre…" size="50">
+            </div>
+            <div class="control">
+              <a id="btn-buscar" class="button">
+                <span class="icon is-small">
+                  <i class="fas fa-search"></i>
+                </span>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div id="div-bdd-info" class="column is-narrow">
+          <span id="span-info-fotos" class="span">Fotos disponibles:</span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Resultados de la búsqueda -->
+  <div id="div-resultados" class="columns is-multiline is-hidden">
+    <div class="column is-12">
+      <button id="btn-esconder-resultados" class="button">
+        <span class="icon is-small">
+          <i class="fas fa-angle-left"></i>
+        </span>
+        &nbsp;Esconder
+      </button>
+      <p id="p-resultados-titulo" class="title">Resultados</p>
+    </div>
+    <div class="column is-half">
+      <section class="content">
+        <p id="p-nada-encontrado" class="has-text-grey-dark is-hidden">No se encontró nada.</p>
+        <div id="div-archivos" class="box">
+          <table id="table-archivos" class="table is-striped is-hoverable">
+            <thead>
+              <th>Nombre de archivo</th>
+              <th>Desc.</th>
+              <th>Etiquetas</th>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+      </section>
+    </div>
+  </div>
+
+  <!-- Imagen principal -->
+  <a id="mostrar" class="title" href="#mostrar">Mostrar imágenes</a>
+  <div id="div-muestra-principal" class="columns is-vcentered">
+    <div class="column is-half is-offset-one-quarter">
+      <div class="card">
+        <div class="card-image">
+          <figure class="image is-fullwidth is-flex is-justify-content-center"><img src="" alt=""></figure>
+        </div>
+        <div class="card-content">
+          <div class="columns">
+            <div class="column"></div>
+            <div class="column is-narrow">
+              <p id="p-ano">Año 1927</p>
+            </div>
+          </div>
+          <div id="div-desc" class="content">
+            <i>Descripción no disponible.</i>
+          </div>
+        </div>
+        <footer class="card-footer">
+          <div class="card-footer-item"><a>Ver más</a></div>
+          <div class="card-footer-item">
+            <a id="a-compartir">
+              <span class="icon is-small">
+                <i class="fas fa-share-alt"></i>
+              </span> Compartir</a>
+            </a>
+          </div>
+          <div class="card-footer-item">
+            <a>
+              <span class="icon is-small">
+                <i class="fas fa-download"></i>
+              </span> Descargar
+            </a>
+          </div>
+        </footer>
+      </div>
+    </div>
+    <div class="column">
+      <a id="a-siguiente" class="button is-outlined">Siguiente &nbsp;
+        <span class="icon is-small">
+          <i class="fas fa-random"></i>
+        </span>
+      </a>
+    </div>
+  </div>
+
+  <!-- galería/fotos de ejemplo -->
+  <div class="columns">
+    <div class="column is-narrow">
+      <p class="title">Fotos de ejemplo</p>
+    </div>
+    <div class="column">
+      <a id="a-recargar-galeria" class="button is-rounded">
+        <span class="icon is-small">
+          <i class="fas fa-undo"></i>
+        </span>
+      </a>
+    </div>
+  </div>
+
+
+  <div id="div-gallery" class="columns is-multiline"></div>
+
+  <!-- scripts -->
+  <script>
+    function chooseRandom(list) {
+      return list[Math.floor(Math.random() * list.length)];
+    }
+
+    /*var gatewayUrl = () => chooseRandom([
+      'https://ipfs.io', 'https://dweb.link', 'https://cloudflare-ipfs.com', /* mismo que cloudfare: 'https://cf-ipfs.com',*/ 'https://gateway.pinata.cloud',
+      /*baja calidad: 'https://ipfs.eth.aragon.network',*/ 'https://ipfs.runfission.com', 'https://jorropo.net', /*baja calidad: 'https://ipfs.eternum.io', */
+      /* requiere autenticación: 'https://astyanax.io',*/ 'https://hardbin.com', 'https://storry.tv', 'https://w3s.link', 'https://4everland.io'
+    //]);
+    var gatewayUrl = () => 'https://ipfs.io';
+
+    class ImageData {
+      /**
+       * @param {string} cid 
+       * @param {string} name 
+       * @param {string} desc 
+       * @param {[string]} keywords 
+       */
+      constructor(cid, name, desc, keywords) {
+        this.cid = cid;
+        this.name = name;
+        this.desc = desc;
+        this.keywords = keywords;
+      }
+    }
+
+    /**
+     * @param {ImageData} 
+     * @returns {string}
+     */
+    function getImgUrl(imgData) {
+      let gw = gatewayUrl();
+      console.info('usando ' + gw);
+      if (imgData.cid.charAt(0) === 'Q') // hash es Qw: es un cid directo al archivo
+        return gw + '/ipfs/' + imgData.cid;
+      else // hash es bafy: es un cid a la carpeta que contiene el archivo
+        return gw + '/ipfs/' + imgData.cid + '/' + imgData.name;
+    }
+
+    $.get('./all.min.json', (data) => {
+      $('#span-info-fotos').text('Fotos disponibles: ' + data.length);
+
+      // elemento card
+      let imgHtml = `
+      <div class="column is-narrow">
+        <div class="card">
+          <div class="card-image">
+            <figure class="image"><img src="" alt=""></figure>
+          </div>
+          <div class="card-content">
+            <div class="content is-small">
+              <center><i>Descripcion no disponible.</i></center>
+            </div>
+          </div>
+          <footer class="card-footer">
+            <div class="card-footer-item"><a>Ver más</a></div>
+          </footer>
+        </div>
+      </div>`;
+      // cargar bdd
+      const imgLimit = 8;
+      const randomPicks = [];
+      for (let i = 0; i < imgLimit; i++) randomPicks.push(chooseRandom(data));
+      for (const imgObj of randomPicks) {
+        // galería de ejemplo
+        let div = document.createElement('div');
+        div.innerHTML = imgHtml;
+        div.classList.add('is-small');
+        div.classList.add('content');
+        $(div).find('img').attr('src', getImgUrl(imgObj))
+
+        const maxCharacters = 70;
+        const lineBreak = 30;
+        let desc = imgObj.desc.trim();
+        let descWords = desc.split(' ');
+
+        let pre = document.createElement('pre');
+        let s = '';
+        let charCount = 0;
+        for (const word of descWords) {
+          s += word + ' ';
+          charCount += word.length + 1;
+          if (s.length > maxCharacters) {
+            break;
+          } else if (charCount > lineBreak) {
+            s += '\n';
+            charCount = 0;
+          }
+        }
+
+        pre.innerText = (s.length >= maxCharacters) ? s.trim() + '…' : s.trim();
+        pre.title = desc;
+
+        $('#div-gallery').append(div);
+        $(div).find('.content').replaceWith(pre);
+      }
+
+      // muestra principal
+      let chosenImgData = chooseRandom(data);
+      $('#div-muestra-principal img').attr('src', getImgUrl(chosenImgData));
+      $('#div-desc').text(chosenImgData.desc);
+      $('#p-ano').text(chosenImgData.date);
+
+      $('#a-siguiente').click((ev) => {
+        $('#a-siguiente').addClass('is-loading');
+        let chosenImgData = chooseRandom(data);
+        $('#div-muestra-principal img').attr('src', getImgUrl(chosenImgData));
+        $('#p-ano').text(chosenImgData.date);
+        $('#div-muestra-principal img').on('load', () => {
+          $('#a-siguiente').removeClass('is-loading');
+          if (chosenImgData.desc)
+            $('#div-desc').text(chosenImgData.desc.trim());
+          else
+            $('#div-desc').text('Descripción no disponible.');
+        });
+
+        setTimeout(() => { $('#a-siguiente').removeClass('is-loading'); }, 8000);
+
+        // centrar la imagen en pantalla
+        // window.location.hash = 'mostrar';
+      });
+
+      // botón de descarga
+
+      // botón de compartir
+      $('#a-compartir').click(() => {
+        if (navigator.canShare)
+          navigator.share($('#div-muestra-principal img').attr('src'));
+      });
+
+      // búsqueda
+      $('#btn-buscar').click((ev) => {
+        const maxSearch = 10;
+        let searchText = $('#tb-buscar').val().trim();
+        if (!searchText) return;
+        let matching = [];
+        let i = 0;
+        for (const e of data) {
+          if (i >= maxSearch)
+            break;
+
+          let re = new RegExp(`.*${searchText}.*`, 'i');
+          if (
+            re.test(e.name) ||
+            re.test(e.desc.toLowerCase()) || re.test(e.keywords.toLowerCase())
+          ) {
+            matching.push(e);
+            i++;
+          }
+        }
+
+        $('#p-resultados-titulo').text(`Resultados para «${searchText}»:`);
+        $('#table-archivos tbody').empty();
+        $('#div-resultados').removeClass('is-hidden');
+
+        if (i === 0) {
+          $('#p-nada-encontrado').removeClass('is-hidden');
+          $('#div-archivos').addClass('is-hidden');
+          return;
+        } else {
+          $('#p-nada-encontrado').addClass('is-hidden');
+          $('#div-archivos').removeClass('is-hidden');
+        }
+
+        matching.forEach((element) => {
+          let a = document.createElement('a');
+          let tr = document.createElement('tr');
+          a.href = '#mostrar';
+          a.text = element.name;
+          $(a).click((ev) => {
+            $('#div-muestra-principal img').attr('src', getImgUrl(element));
+            $('#div-desc').text(element.desc);
+          });
+          $(tr).append($('<th>').append(a));
+          $(tr).append($('<td>').text(element.desc))
+          $(tr).append($('<td>').text(element.keywords))
+          $('#table-archivos tbody').append(tr);
+          // $('#div-archivos').append(document.createElement('br'));
+        });
+
+      });
+
+      // esconder resultados
+      $('#btn-esconder-resultados').click((ev) => {
+        $('#div-resultados').addClass('is-hidden');
+        $('#table-archivos tbody').empty();
+        $('#tb-buscar').val('');
+      });
+    });
+  </script>
+</body>
+
+</html>
